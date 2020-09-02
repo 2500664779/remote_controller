@@ -1,0 +1,43 @@
+#ifndef __DHT11_H__
+#define __DHT11_H__
+
+#include <wiringPi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <time.h>
+
+#include "sensor.h"
+
+
+#include <string>
+
+
+//温湿度传感器类
+//getJson方式返回Json格式字符串
+struct Dht11{
+    Dht11(int pin) {
+        m_pin = pin;
+        m_json[0] = '\0';
+    }
+    int getJson();
+    int read(int *temp, int* mios);
+
+    //存储温度和湿度的变量
+    int m_temp;
+    int m_mois;
+
+    //定义了引脚
+    int m_pin;
+    char m_json[1024];
+    enum Limit
+    {
+        MAX_TIME = 85,
+    };
+};
+
+
+
+
+#endif
