@@ -1,6 +1,1 @@
-portnumber is 7100
-[trace] - remote_controller.c:main:85 , now listening port:7100
-[error] - remote_controller.c:main:118 Invalid argument, connfd < 0
-portnumber is 7100
-[trace] - remote_controller.cpp:main:87 , now listening port:7100
-[error] - remote_controller.cpp:main:121 Invalid argument, connfd < 0
+

@@ -12,6 +12,10 @@
 
 #include <string>
 
+
+namespace Sensor{
+
+
 //温湿度传感器类
 //getJson方式返回Json格式字符串
 class Dht11 : public ISensor
@@ -38,5 +42,7 @@ class Dht11 : public ISensor
         //定义了传感器的数据信息;
         char m_info[1024];
 };
+
+}; // namespace Sensor
 
 #endif

@@ -11,12 +11,15 @@
 #define __ISRNSOR_H__
 
 #include <string>
-
+namespace Sensor{
+    
 class ISensor
 {
     public:
         virtual ~ISensor(){};
         virtual char* getInfo() = 0;
 };
+
+}; // namespace Sensor
 
 #endif

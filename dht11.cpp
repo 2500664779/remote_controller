@@ -3,27 +3,33 @@
 #include <ctime>
 #include <time.h>
 
-Dht11::Dht11(int pin) : m_pin(pin){};
-Dht11::~Dht11(){};
+Sensor::Dht11::Dht11(int pin) : m_pin(pin){};
+
+Sensor::Dht11::~Dht11(){};
 
 //try read 5times
 //if failed return ""
-char* Dht11::getInfo() {
-    int trytimes = 5;
+char* Sensor::Dht11::getInfo() {
+    int trytimes = 30;
     while (trytimes--) {
-        if (read(&m_temp, &m_mois) == 0 && m_temp != 0) break;
-        
+        if (read(&m_mois, &m_temp) == 0 && m_temp != 0) break; 
     }
 
     if (trytimes != -1) {
         sprintf(m_info, "temperature:%d,moisture:%d\n", m_temp, m_mois);
+    }
+    else {
+        m_info[0] = '\0';
     }
     return m_info;
 }
 
 //dht读取函数
 //正确返回0,否则返回-1
-int Dht11::read(int *h, int *t) {
+int Sensor::Dht11::read(int *h, int *t) {
+
+    //直接用老外的代码了..看着怪累人的...
+
     uint8_t lststate=HIGH;
     uint8_t counter=0;
     uint8_t j=0,i;

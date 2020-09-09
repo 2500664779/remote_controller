@@ -16,14 +16,15 @@
 #include <wiringPi.h>
 
 
-#include <
+#include <vector>
 
 
 #define MAXBUFFER 1024
 #define LISTENQ 20
 
 #define RELAY_PIN 0
-#define DHT11_PIN 1
+#define DHT11_1_PIN 1
+#define DHT11_2_PIN 2
 
 int read(int *t, int *m);
 
@@ -35,16 +36,14 @@ int main(int argc, char *argv[])
         if ((portnumber = atoi(argv[1])) < 0)
         {
             errsys("usage:%s portnumber\n", argv[0]);
-            return 1;
+            exit(1);
         }
     }
     else
     {
         errsys("usage:%s portnumber\n", argv[0]);
-        return 1;
+        exit(1);
     }
-
-    printf("portnumber is %d\n", portnumber);
 
     int listenfd, connfd, epfd, nfds;
     int sockfd;
@@ -55,7 +54,7 @@ int main(int argc, char *argv[])
 
     struct epoll_event ev, events[20];
 
-    epfd = epoll_create(256);
+    epfd = epoll_create(24);
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -90,31 +89,23 @@ int main(int argc, char *argv[])
     };
     trace("now listening port:%d\n", portnumber);
 
-    //将BCM_GPIO 17即11口设置为输出
-    wiringPiSetup();
-    
-
-
-
-
-    /******************************************
-     * 
-     * 
-     * 
-     *          真的是日了,各种问题...
-     * 
-     * 
-     ******************************************/
-    
+    //GPIO设置
+    wiringPiSetup();  
     Relay relay(RELAY_PIN);
-    
-    struct Dht11 dht11(1);
+
+    //建立传感器数组,存放ISensor指针
+    typedef std::vector<Sensor::ISensor *> Sensor_vec;
+    Sensor_vec sensors;
+    Sensor::Dht11 dht11_1(DHT11_1_PIN);
+    Sensor::Dht11 dht11_2(DHT11_2_PIN);
+    sensors.push_back(&dht11_1);
+    sensors.push_back(&dht11_2);
+
     //进入epoll监听环节
     for (;;)
     {
         nfds = epoll_wait(epfd, events, 20, 500);
-        int i;
-        for (i = 0; i < nfds; i++)
+        for (int i = 0; i < nfds; i++)
         {
 
             //监听的端口有新连接
@@ -182,10 +173,23 @@ int main(int argc, char *argv[])
                         trace("RELAY OPEN\n");
                         digitalWrite(RELAY_PIN, HIGH);
                     }
+                    memset(buf, '\0', sizeof(buf));
+                    std::string sendbuf;
+                    for (int i = 0; i < sensors.size(); ++i)
+                    {
+                        sendbuf += std::string(sensors[i]->getInfo());
+                    }
 
-                    strcpy(buf, dht11.getInfo());
-
+                    size_t len = sendbuf.size();
+                    strcpy(buf, sendbuf.c_str());
+                    if (!len)
+                    {
+                        buf[0] = ' ';
+                    }
+                    
+                    trace("waiting to write fd:%d\n", sockfd);
                     write(sockfd, buf, strlen(buf));
+                    trace("writing finished\n");
                 }
             }
             else if (events[i].events & EPOLLOUT)
