@@ -281,6 +281,8 @@ namespace Threads
 
             sprintf(buffer, "update env set tem ='%d' , hum ='%d%', wind='100',datetime=now() where id = 1;", tem_avg, hum_avg);
             Myysql mysql;
+
+            // 好像把,ip账号密码给暴露了......应该没啥大问题吧..
             mysql.Connect("120.26.187.166", "root", "123456", "XTBridge");
             // mysql.Query("update env set tem ='50' , hum ='65%', wind='4',datetime=now() where id = 1;");
             if (!mysql.Query(buffer))

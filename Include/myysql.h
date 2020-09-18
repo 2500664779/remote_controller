@@ -17,6 +17,7 @@
 
 #include <mysql/mysql.h>
 
+// 故意多写一个y,也不知道取什么名字比较好...
 class Myysql
 {
 public:
