@@ -25,12 +25,14 @@ class Dht11 : public ISensor
         ~Dht11();
         char* getInfo();
 
+        // 把read接口暴露出来,可以直接获取两个变量
+        int read(int *mois, int *temp);
+
     private:
         enum Limit
         {
             MAX_TIME = 85,
         };
-        int read(int *mois, int *temp);
 
         //存储温度和湿度的变量
         int m_temp;

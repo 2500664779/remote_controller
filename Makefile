@@ -5,8 +5,10 @@ TARGET = a.out
 # 编译方式,主要是取恒等号后面的值
 CPP := g++
 
-# 编译时候加的一些参数,如动态库等
-CLAGS = -lwiringPi
+# 编译时候加的一些参数,如动态库等 
+CLAGS = -g -lwiringPi -lpthread -std=c++11 \
+		-L/usr/lib/mysql/ -lmysqlclient 
+# 这个mysql库,需要自己注意一下具体位置稍作修改
 
 # rm -rf的变量
 RMRF := rm -rf
@@ -35,7 +37,7 @@ $(TARGET): $(ALL_OBJ)
 
 # 生成.o文件,依赖文件为对应的.cpp文件
 %.o: %.cpp
-	$(CPP) $(ALL_INCLUDE) -c $^ -o $@
+	$(CPP) $(CLAGS) $(ALL_INCLUDE) -c $^ -o $@
  
 
 

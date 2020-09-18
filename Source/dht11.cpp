@@ -7,7 +7,7 @@ Sensor::Dht11::Dht11(int pin) : m_pin(pin){};
 
 Sensor::Dht11::~Dht11(){};
 
-//try read 5times
+//try read 30 times
 //if failed return ""
 char* Sensor::Dht11::getInfo() {
     int trytimes = 30;
