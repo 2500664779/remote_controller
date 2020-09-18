@@ -1,4 +1,8 @@
 /WiringPi
 a.out
 1.txt
+
+
+# 由于会暴露数据库账号密码,所以把thread.cpp放到.gitignore里面来
+# 希望这个文件不会突然丢失吧......
 /Source/thread.cpp
